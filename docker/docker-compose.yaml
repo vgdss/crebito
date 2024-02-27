@@ -48,7 +48,7 @@ services:
       POSTGRES_PASSWORD: password
     network_mode: host
     volumes:
-      - ./script.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - pgdata:/var/lib/postgresql/data
       - ./postgresql.conf:/docker-entrypoint-initdb.d/postgresql.conf
     command: postgres -c config_file=/docker-entrypoint-initdb.d/postgresql.conf
