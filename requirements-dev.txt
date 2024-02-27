@@ -1,0 +1,4 @@
+pip-tools # lock de dependencias
+black # auto formatação
+pip-autoremove # remove a package and its unused dependencies
+isort
