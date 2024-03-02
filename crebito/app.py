@@ -1,12 +1,6 @@
-import logging
-
 from fastapi import FastAPI
 
 from crebito.routes import clientes, transacoes
-
-# Configuração do logger
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Crebito",

@@ -17,6 +17,4 @@ async def get_extrato(cliente_id: PositiveInt):
     except ValidationError:
         raise HTTPException(status_code=400, detail="Dados de entrada inválidos")
     except Exception as e:
-        print('EXTRATO', e)
-        #logger.exception("[EXTRATO] [500] [ERRO AO PROCESSAR O EXTRATO]")
         raise HTTPException(status_code=500, detail="Erro ao processar a transação")

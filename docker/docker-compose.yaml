@@ -56,7 +56,7 @@ services:
       resources:
         limits:
           cpus: "0.40"
-          memory: "250MB"        
+          memory: "300MB"        
 
 volumes:
   pgdata:
