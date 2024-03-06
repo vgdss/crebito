@@ -1,29 +1,31 @@
-from sqlalchemy import QueuePool
+"""Database connection"""
 from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
                                     async_sessionmaker, create_async_engine)
 from sqlalchemy.orm import declarative_base
 
-DATABASE_URL = "postgresql+asyncpg://user:password@127.0.0.1/crebito"
+from .config import settings
 
-engine: AsyncEngine = create_async_engine(
-    url=DATABASE_URL,
-    pool_size=10,
-    max_overflow=20,
-    pool_timeout=30,
-    pool_recycle=1800,
-    poolclass=QueuePool,
+# Criação do AsyncEngine
+async_engine: AsyncEngine = create_async_engine(
+    url=settings.db.uri,
+    pool_size=settings.db.pool_size,
+    max_overflow=settings.db.max_overflow,
+    pool_timeout=settings.db.pool_timeout,
+    pool_recycle=settings.db.pool_recycle,
+    echo=settings.db.echo,
 )
 
-SessionLocal: AsyncSession = async_sessionmaker(
-    bind=engine, 
-    expire_on_commit=False,
+# Configuração do AsyncSession
+async_session = async_sessionmaker(
+    bind=async_engine, 
+    expire_on_commit=False, 
     autoflush=True,
-    class_=AsyncSession,
+    class_=AsyncSession
 )
 
 Base = declarative_base()
 
-
 async def get_db_session():
-    async with SessionLocal() as session:
+    #async with SessionLocal() as session:
+    async with async_session() as session:
         yield session

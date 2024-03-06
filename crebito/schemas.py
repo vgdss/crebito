@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field, PositiveInt, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, PositiveInt
 
 
 class RespostaTransacaoSchema(BaseModel):
