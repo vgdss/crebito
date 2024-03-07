@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from crebito.database import get_db_session
 from crebito.models import Cliente, Transacao
-from crebito.schemas import ExtratoSchema, Saldo
+from crebito.schemas import ExtratoSchema, Saldo, TransacaoExtratoSchema
 
 
 router = APIRouter()
@@ -18,20 +18,22 @@ async def get_extrato(cliente_id: PositiveInt, session: AsyncSession = Depends(g
     if not cliente:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cliente não encontrado!")
 
-    # Consulta as 10 últimas transações do cliente de forma assíncrona
     ultimas_transacoes = await session.execute(
         select(
-            Transacao.valor,
-            Transacao.tipo,
-            Transacao.descricao,
-            Transacao.realizada_em
+            Transacao
         ).where(Transacao.cliente_id == cliente_id)
-        .order_by(desc(Transacao.realizada_em))
+        .order_by(desc(Transacao.id))
         .limit(10)
     )
     
-    # Monta o extrato completo
-    return ExtratoSchema(
-        saldo = Saldo(total=cliente.saldo, limite=cliente.limite), 
-        ultimas_transacoes = ultimas_transacoes.mappings().all(),
+    return ExtratoSchema.model_construct(
+        saldo = Saldo.model_construct(total=cliente.saldo, limite=cliente.limite),
+        ultimas_transacoes=[
+            TransacaoExtratoSchema.model_construct(
+                valor=t.valor,
+                tipo=t.tipo,
+                descricao=t.descricao,
+                realizada_em=t.realizada_em
+            ) for t in ultimas_transacoes.scalars().all()
+        ]
     )

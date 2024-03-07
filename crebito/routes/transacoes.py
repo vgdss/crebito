@@ -21,21 +21,20 @@ async def criar_transacao(cliente_id: PositiveInt, transacao: TransacaoSchema, s
 
         # Atualiza o saldo do cliente com base no tipo de transação
         novo_saldo = cliente.saldo + transacao.valor if transacao.tipo == 'c' else cliente.saldo - transacao.valor
+        
         # Verifica se a transacao de debito ultrapassa o limite do cliente
         if transacao.tipo == 'd' and (novo_saldo < -cliente.limite):
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="A transacao ultrapassa o limite do cliente!")
+        
         # Atualiza o saldo do cliente
         cliente.saldo = novo_saldo
-
+        
         # Cria e adiciona a nova transação
-        nova_transacao = Transacao(
-            valor=transacao.valor, 
-            tipo=transacao.tipo, 
-            descricao=transacao.descricao, 
-            cliente_id=cliente_id,
-            realizada_em=datetime.utcnow()
+        session.add(
+            Transacao(
+                **transacao.model_dump(),
+                cliente_id=cliente_id,
+            )
         )
-
-        session.add(nova_transacao)
     
     return cliente

@@ -17,8 +17,8 @@ class Transacao(Base):
     cliente_id: Mapped[int] = Column(Integer, ForeignKey('clientes.id'), nullable=False)
 
     __table_args__ = (
-        Index('idx_transacoes_cliente_id_realizada_em', cliente_id, desc(realizada_em)),
-    )
+        Index('idx_transacoes_cliente_id_id_desc', cliente_id, desc(id)),
+    )    
 
 
 class Cliente(Base):
