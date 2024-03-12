@@ -1,5 +1,11 @@
 from contextlib import asynccontextmanager
 
+# from opentelemetry import trace
+# from opentelemetry.sdk.trace import TracerProvider
+# from opentelemetry.sdk.trace.export import BatchSpanProcessor
+# from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+# from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
 from fastapi import FastAPI
 
 from sqlalchemy import delete, update
@@ -8,6 +14,16 @@ from crebito.routes import clientes, transacoes
 from .database import async_session
 from .models import Cliente, Transacao
 from .schemas import TransacaoSchema
+
+
+# # Configurar o provedor de tracer
+# trace.set_tracer_provider(TracerProvider())
+
+# # Configurar o exportador OTLP
+# otlp_exporter = OTLPSpanExporter(endpoint="0.0.0.0:4317", insecure=True)
+
+# # Adicionar o processador de span ao provedor de tracer
+# trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(otlp_exporter))
 
 
 @asynccontextmanager
@@ -45,6 +61,9 @@ app = FastAPI(
     description="Rinha de Backend - 2024/Q1",
     lifespan=lifespan # WARMUP
 )
+
+# # Instrumentar FastAPI
+# FastAPIInstrumentor.instrument_app(app)
 
 app.include_router(clientes.router)
 app.include_router(transacoes.router)

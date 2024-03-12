@@ -13,7 +13,7 @@ router = APIRouter()
 @router.get("/clientes/{cliente_id}/extrato", status_code=status.HTTP_200_OK, response_model=ExtratoSchema)
 async def get_extrato(cliente_id: PositiveInt, session: AsyncSession = Depends(get_db_session)):
     # Consulta o cliente pelo ID de forma assíncrona
-    cliente = await session.get(Cliente, cliente_id, with_for_update=True)
+    cliente = await session.get(Cliente, cliente_id)
 
     if not cliente:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cliente não encontrado!")

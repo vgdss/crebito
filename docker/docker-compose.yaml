@@ -2,17 +2,17 @@ version: "3.5"
 
 x-db-connection-settings: &db-connection-settings
   CREBITO_DB__uri: "postgresql+asyncpg://user:password@127.0.0.1/crebito"
-  CREBITO_DB__pool_size: 10
+  CREBITO_DB__pool_size: 15
   CREBITO_DB__max_overflow: 5
-  CREBITO_DB__pool_timeout: 60
+  CREBITO_DB__pool_timeout: 30
   CREBITO_DB__pool_recycle: 1800
   CREBITO_DB__echo: false
 
 x-healthcheck-settings: &default-healthcheck
   interval: 1s
-  timeout: 3s
+  timeout: 2s
   retries: 5
-  start_period: 2s
+  start_period: 1s
 
 services:
   api1: &api
@@ -31,7 +31,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.45"
+          cpus: "0.5"
           memory: "100MB"
     healthcheck:
       <<: *default-healthcheck
@@ -68,7 +68,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.2"
+          cpus: "0.1"
           memory: "50MB"
     healthcheck:
       <<: *default-healthcheck

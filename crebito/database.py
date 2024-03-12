@@ -3,21 +3,19 @@ from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
                                     async_sessionmaker, create_async_engine)
 from sqlalchemy.orm import declarative_base
 
-from .config import settings
-
 # Criação do AsyncEngine
-async_engine: AsyncEngine = create_async_engine(
-    url=settings.db.uri,
-    pool_size=settings.db.pool_size,
-    max_overflow=settings.db.max_overflow,
-    pool_timeout=settings.db.pool_timeout,
-    pool_recycle=settings.db.pool_recycle,
-    echo=settings.db.echo,
+engine: AsyncEngine = create_async_engine(
+    url="postgresql+asyncpg://user:password@127.0.0.1/crebito",
+    pool_size=15,
+    max_overflow=5,
+    pool_timeout=30,
+    pool_recycle=1800,
+    echo=False,
 )
 
 # Configuração do AsyncSession
 async_session = async_sessionmaker(
-    bind=async_engine, 
+    bind=engine, 
     expire_on_commit=False, 
     autoflush=True,
     class_=AsyncSession

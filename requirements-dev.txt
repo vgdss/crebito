@@ -3,3 +3,8 @@ pip-autoremove
 isort
 mypy
 sqlalchemy[mypy]
+opentelemetry-sdk~=1.23.0
+opentelemetry-instrumentation-fastapi~=0.44b0
+opentelemetry-instrumentation-sqlalchemy~=0.44b0
+opentelemetry-instrumentation-asyncpg~=0.44b0
+opentelemetry-exporter-otlp~=1.23.0
